@@ -1,0 +1,1713 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Play Forever — 17 браузерных игр</title>
+<meta name="description" content="Play Forever — 17 мини-игр прямо в браузере: аркады, головоломки и выживание. Без регистрации и установки.">
+<style>
+:root{
+--bg:#f6f8f1;--panel:#fff;--line:#e0e7d3;--ink:#18220f;--muted:#6b7a58;
+--accent:#8fd400;--accent2:#b6ff00;
+--dark:#1b2a10;--green:#7ec400;--yellow:#ffe600;--lime:#b6ff00;--lime2:#d8ff5c;--paper:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5;
+font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
+-webkit-font-smoothing:antialiased}
+.top{position:sticky;top:0;z-index:20;background:rgba(246,248,241,.92);border-bottom:1px solid var(--line);
+-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.bar{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 20px}
+.logo{font-weight:800;font-size:19px;letter-spacing:-.02em;white-space:nowrap}
+.logo span{color:#6cae00}
+.logo.small{font-size:15px}
+.meta{font-size:12.5px;color:var(--muted);text-align:right}
+.hero{max-width:1180px;margin:0 auto;padding:44px 20px 6px}
+h1{font-size:clamp(30px,5vw,46px);line-height:1.06;margin:0 0 12px;letter-spacing:-.035em;font-weight:800}
+.hero p{margin:0;max-width:600px;color:var(--muted);font-size:16px}
+.sec-head{max-width:1180px;margin:0 auto;padding:30px 20px 0;display:flex;align-items:center;gap:10px}
+.sec-head h2{margin:0;font-size:19px;font-weight:700}
+#count{font-size:12.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:1px 9px;background:#fff}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:16px;
+max-width:1180px;margin:0 auto;padding:18px 20px 44px}
+.card{position:relative;display:flex;flex-direction:column;background:var(--panel);
+border:1px solid var(--line);border-radius:14px;padding:18px;transition:border-color .15s,box-shadow .15s,transform .15s}
+.card:hover{border-color:#bcd88f;box-shadow:0 10px 26px rgba(40,70,10,.09);transform:translateY(-2px)}
+.card .num{position:absolute;top:15px;right:16px;font-size:12px;color:#aab79a;font-variant-numeric:tabular-nums}
+.card .emoji{width:42px;height:42px;display:grid;place-items:center;font-size:22px;border-radius:11px;
+background:#f2f9e2;border:1px solid #e4f0c9;margin-bottom:12px;line-height:1}
+.card h3{margin:0 0 6px;font-size:16px;font-weight:700;letter-spacing:-.01em}
+.card p{margin:0 0 14px;font-size:13.5px;color:var(--muted);min-height:40px}
+.rec{font-size:11.5px;color:#6b7a58;background:#f7faf0;border:1px solid var(--line);border-radius:7px;
+padding:3px 8px;align-self:flex-start;margin-top:auto;margin-bottom:12px;font-variant-numeric:tabular-nums}
+.play{font:inherit;font-size:14px;font-weight:600;cursor:pointer;color:#1a2609;background:var(--accent2);
+border:1px solid #9edc00;border-radius:10px;padding:10px;transition:filter .15s,transform .1s}
+.play:hover{filter:brightness(1.04)}
+.play:active{transform:translateY(1px)}
+footer{border-top:1px solid var(--line);padding:26px 20px 40px;text-align:center;color:var(--muted);font-size:13px}
+footer p{margin:6px 0 0}
+#overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:14px;
+background:rgba(16,26,8,.55);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+#overlay[hidden]{display:none}
+.modal{width:min(740px,100%);max-height:94vh;display:flex;flex-direction:column;background:#fbfdf6;
+border:1px solid #d8e3c4;border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(10,20,0,.35)}
+.mhead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;background:#fff;border-bottom:1px solid var(--line)}
+.mhead h2{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em}
+#close{flex:0 0 auto;width:36px;height:36px;font:inherit;font-size:16px;cursor:pointer;color:#3c4a2c;
+background:#f4f7ec;border:1px solid var(--line);border-radius:9px}
+#close:hover{background:#eaf3d8}
+#gamearea{padding:18px;overflow:auto;min-height:340px}
+.g{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.hud{font-size:15px;font-weight:600;text-align:center;color:#2c3a1c;font-variant-numeric:tabular-nums}
+.msg{font-size:13px;text-align:center;color:var(--muted);min-height:20px}
+.big-num{font-size:54px;font-weight:800;line-height:1;color:#5aa800;font-variant-numeric:tabular-nums}
+.big-btn{font:inherit;font-size:18px;font-weight:700;padding:14px 26px;cursor:pointer;color:#1a2609;
+background:var(--accent2);border:1px solid #9edc00;border-radius:12px;transition:filter .15s}
+.big-btn:hover{filter:brightness(1.05)}
+.big-btn:active{transform:translateY(1px)}
+.food{font-size:54px;line-height:1}
+.float{position:absolute;font-weight:700;font-size:18px;color:#5aa800;pointer-events:none;animation:up .8s ease-out forwards}
+@keyframes up{to{transform:translateY(-70px);opacity:0}}
+.btn{font:inherit;font-size:13.5px;font-weight:600;padding:9px 14px;cursor:pointer;color:#243214;
+background:#fff;border:1px solid #cfdcb6;border-radius:9px;transition:background .15s,border-color .15s}
+.btn:hover:not(:disabled){background:#f3f8e7;border-color:#b4cb90}
+.btn.green{background:var(--accent2);border-color:#9edc00;color:#1a2609}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.inp{font:inherit;font-size:16px;width:150px;padding:9px;text-align:center;color:var(--ink);
+background:#fff;border:1px solid #cfdcb6;border-radius:9px}
+.cv{display:block;margin:0 auto;max-width:100%;touch-action:none;border:1px solid #cfdcb6;border-radius:12px;background:#0f1a06}
+.pad{display:grid;grid-template-columns:repeat(3,56px);gap:6px;justify-content:center;margin-top:2px}
+.pad .btn{font-size:18px;padding:8px 0}
+.react{width:min(340px,100%);height:180px;display:grid;place-items:center;padding:10px;cursor:pointer;user-select:none;
+font-size:20px;font-weight:600;text-align:center;color:#2b3a1a;background:#f2f6ea;border:1px solid #d5e0c2;border-radius:14px}
+.react.wait{background:#fff6cf;border-color:#eada97}
+.react.go{background:#8fd400;border-color:#7bbd00;color:#15220a;font-size:28px;font-weight:800}
+.react.ok{background:#dcf8ad;border-color:#b9e07a;color:#1a2609}
+.react.bad{background:#ffe0e0;border-color:#f0b4b4;color:#7a1a1a}
+.b2048{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:6px;width:min(320px,100%);aspect-ratio:1;margin:0 auto}
+.cell{display:grid;place-items:center;min-height:0;background:#f1f6e6;border:1px solid #cfdcb6;border-radius:9px;
+font-weight:700;font-size:28px;line-height:1;font-variant-numeric:tabular-nums}
+.ms{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;width:min(340px,100%);aspect-ratio:1;margin:0 auto}
+.mcell{font:inherit;font-size:15px;font-weight:700;color:#243214;padding:0;min-width:0;cursor:pointer;
+border:1px solid #cfdcb6;border-radius:6px;background:#eef5dd;display:grid;place-items:center}
+.mcell:hover{background:#e3eeca}
+.mcell.open{background:#fbfdf6;cursor:default}
+.mcell.boom{background:#ffe0e0}
+.hangword{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;font-size:24px;font-weight:700;
+letter-spacing:1px;margin:4px 0;font-variant-numeric:tabular-nums}
+.hangword span{min-width:20px;text-align:center;border-bottom:2px solid #243214}
+.kb{display:grid;grid-template-columns:repeat(11,1fr);gap:4px;width:100%;max-width:460px;margin:10px auto 0}
+.kb button{font:inherit;font-size:13.5px;font-weight:600;padding:7px 0;cursor:pointer;color:#243214;
+background:#fff;border:1px solid #cfdcb6;border-radius:6px}
+.kb button:hover:not(:disabled){background:#f3f8e7}
+.kb button:disabled{opacity:.5}
+.kb button.hit{background:#b6ff00;border-color:#9edc00;color:#1a2609}
+.kb button.miss{background:#ffe0e0;border-color:#f0b4b4;color:#7a1a1a}
+.ttt{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:6px;
+width:min(300px,100%);aspect-ratio:1;margin:0 auto}
+.ttt button{font:inherit;font-size:40px;font-weight:700;cursor:pointer;color:#26361a;background:#fff;
+border:1px solid #cfdcb6;border-radius:10px;display:grid;place-items:center}
+.ttt button:hover{background:#f7fbf0}
+.mem{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:7px;
+width:min(340px,100%);aspect-ratio:1;margin:0 auto}
+.mem button{font:inherit;font-size:26px;cursor:pointer;background:#eef5dd;border:1px solid #cfdcb6;
+border-radius:10px;display:grid;place-items:center;transition:background .12s}
+.mem button:hover{background:#e3eeca}
+.mem button.up{background:#fff;border-color:#b6d18d}
+.mem button.done{background:#dcf8ad;border-color:#b9e07a}
+.puz{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:6px;
+width:min(300px,100%);aspect-ratio:1;margin:0 auto}
+.puz button{font:inherit;font-size:30px;font-weight:700;cursor:pointer;color:#1f2d12;background:#f4fade;
+border:1px solid #cfdcb6;border-radius:10px}
+.puz button:hover{background:#eaf6cf}
+.puz button.blank{visibility:hidden}
+.catch{position:relative;overflow:hidden;width:320px;max-width:100%;margin:0 auto;cursor:none;touch-action:none;
+border:1px solid #cfdcb6;border-radius:12px;background:linear-gradient(#f7fbf0,#dfefbb)}
+.basket{position:absolute;bottom:2px;width:56px;font-size:34px;line-height:1;text-align:center}
+.fruit{position:absolute;width:30px;font-size:25px;line-height:1;text-align:center}
+.quiz-q{font-size:17px;font-weight:700;text-align:center;margin:2px 0 12px;min-height:46px}
+.quiz-a{display:grid;gap:8px;width:100%;max-width:430px;margin:0 auto}
+.quiz-a button{font:inherit;font-size:15px;font-weight:500;text-align:left;padding:11px 13px;cursor:pointer;
+color:var(--ink);background:#fff;border:1px solid #cfdcb6;border-radius:9px}
+.quiz-a button:hover:not(:disabled){background:#f3f8e7}
+.quiz-a button.good{background:#dcf8ad;border-color:#b9e07a}
+.quiz-a button.bad{background:#ffe0e0;border-color:#f0b4b4}
+:focus-visible{outline:2px solid #6cae00;outline-offset:2px}
+@media (max-width:520px){
+.meta{display:none}
+.hero{padding-top:30px}
+#gamearea{padding:14px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="bar">
+<div class="logo">Play<span>Forever</span></div>
+<div class="meta">17 игр · без регистрации · работает офлайн</div>
+</div>
+</header>
+<div class="hero">
+<h1>Играй сколько хочешь</h1>
+<p>Семнадцать мини-игр прямо в браузере: аркады, головоломки и выживание. Выбирай карточку — и играй, ничего скачивать не нужно.</p>
+</div>
+<main>
+<div class="sec-head"><h2>Все игры</h2><span id="count">17</span></div>
+<div class="cards" id="catalog"></div>
+</main>
+<footer>
+<div class="logo small">Play<span>Forever</span></div>
+<p>© 2026 · Все игры работают локально в браузере</p>
+</footer>
+<div id="overlay" hidden>
+<div class="modal" role="dialog" aria-modal="true" aria-labelledby="gtitle">
+<div class="mhead"><h2 id="gtitle">Игра</h2><button id="close" type="button" aria-label="Закрыть игру">✕</button></div>
+<div id="gamearea"></div>
+</div>
+</div>
+<script>
+
+"use strict";
+const store={
+  get(k,d){try{const v=localStorage.getItem("artem_"+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},
+  set(k,v){try{localStorage.setItem("artem_"+k,JSON.stringify(v));}catch(e){}}
+};
+const h=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;};
+const rnd=n=>Math.floor(Math.random()*n);
+const pick=a=>a[rnd(a.length)];
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=rnd(i+1);const t=a[i];a[i]=a[j];a[j]=t;}return a;};
+function mountClicker(ctx){
+  let n=0,mul=1,auto=0,u1=false,u2=false,u3=false;
+  const g=h("div","g");
+  const score=h("div","big-num","0");
+  const label=h("div","msg","монеток");
+  const food=h("div","food","🍩");
+  const btn=h("button","big-btn","ЖМИ МЕНЯ!!!");
+  const b1=h("button","btn","×2 клик — 100");
+  const b2=h("button","btn","🤖 автоклик — 300");
+  const b3=h("button","btn","×5 клик — 1500");
+  const msg=h("div","msg","Каждый клик даёт монетку. Покупай улучшения!");
+  const row=h("div","row");
+  row.append(b1,b2,b3);
+  g.append(score,label,food,btn,row,msg);
+  ctx.area.append(g);
+  function refresh(){
+    score.textContent=n;
+    b1.disabled=u1||n<100;
+    b2.disabled=u2||n<300;
+    b3.disabled=u3||n<1500;
+    b1.textContent=u1?"×2 куплено!":"×2 клик — 100";
+    b2.textContent=u2?"🤖 работает!":"🤖 автоклик — 300";
+    b3.textContent=u3?"×5 куплено!":"×5 клик — 1500";
+    if(n>0)ctx.save(n);
+  }
+  function pop(){
+    const f=h("div","float","+"+mul);
+    f.style.left=(25+rnd(55))+"%";
+    f.style.top=(30+rnd(30))+"%";
+    g.appendChild(f);
+    setTimeout(()=>f.remove(),800);
+  }
+  btn.onclick=()=>{n+=mul;food.textContent=pick(["🍩","🍪","🧁","🍰","🍫"]);pop();refresh();};
+  b1.onclick=()=>{if(u1||n<100)return;n-=100;u1=true;mul=2;msg.textContent="Теперь клик даёт ×2 монетки!";refresh();};
+  b2.onclick=()=>{if(u2||n<300)return;n-=300;u2=true;auto=1;msg.textContent="Автоклик пошёл — 1 монетка в секунду!";refresh();};
+  b3.onclick=()=>{if(u3||n<1500)return;n-=1500;u3=true;mul=5;msg.textContent="МЕГА КЛИК ×5!!! Ты машина!";refresh();};
+  ctx.every(1000,()=>{if(auto){n+=auto;refresh();}});
+  refresh();
+}
+
+function mountSnake(ctx){
+  const CELL=20,N=16,W=CELL*N;
+  const cv=document.createElement("canvas");
+  cv.width=W;cv.height=W;cv.className="cv";
+  const c=cv.getContext("2d");
+  const hud=h("div","hud","Счёт: 0");
+  const msg=h("div","msg","Стрелки на клавиатуре или кнопки ниже");
+  const pad=h("div","pad");
+  const up=h("button","btn","⬆"),left=h("button","btn","⬅"),right=h("button","btn","➡"),down=h("button","btn","⬇");
+  up.style.gridArea="1/2";left.style.gridArea="2/1";right.style.gridArea="2/3";down.style.gridArea="3/2";
+  pad.append(up,left,right,down);
+  const again=h("button","btn","🔁 Заново");
+  ctx.area.append(hud,cv,msg,pad,again);
+  let snake,dir,next,food,score,dead,started;
+  function reset(){
+    snake=[{x:8,y:8},{x:7,y:8},{x:6,y:8}];
+    dir={x:1,y:0};next={x:1,y:0};food={x:12,y:8};score=0;dead=false;started=false;
+    hud.textContent="Счёт: 0";msg.textContent="Стрелки на клавиатуре или кнопки ниже";draw();
+  }
+  function placeFood(){
+    let t=0;
+    do{food={x:rnd(N),y:rnd(N)};t++;}while(t<400&&snake.some(s=>s.x===food.x&&s.y===food.y));
+  }
+  function draw(){
+    c.fillStyle="#0f2b00";c.fillRect(0,0,W,W);
+    c.strokeStyle="rgba(180,255,0,.13)";c.lineWidth=1;
+    for(let i=1;i<N;i++){
+      c.beginPath();c.moveTo(i*CELL,0);c.lineTo(i*CELL,W);c.stroke();
+      c.beginPath();c.moveTo(0,i*CELL);c.lineTo(W,i*CELL);c.stroke();
+    }
+    c.fillStyle="#ff3b3b";c.beginPath();c.arc(food.x*CELL+CELL/2,food.y*CELL+CELL/2,CELL/2-3,0,6.3);c.fill();
+    snake.forEach((s,i)=>{
+      c.fillStyle=i===0?"#eaff3d":"#8ce000";
+      c.fillRect(s.x*CELL+2,s.y*CELL+2,CELL-4,CELL-4);
+    });
+  }
+  function step(){
+    if(dead||!started)return;
+    if(next.x!==-dir.x||next.y!==-dir.y)dir=next;
+    const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
+    if(head.x<0||head.y<0||head.x>=N||head.y>=N||snake.some(s=>s.x===head.x&&s.y===head.y)){
+      dead=true;ctx.save(score);msg.textContent="💀 Ты проиграл! Счёт: "+score+" — жми «Заново»";draw();return;
+    }
+    snake.unshift(head);
+    if(head.x===food.x&&head.y===food.y){score+=10;hud.textContent="Счёт: "+score;placeFood();}
+    else snake.pop();
+    draw();
+  }
+  function turn(k){
+    if(dead)return;
+    if(!started){
+      started=true;
+      if(k.x!==-dir.x||k.y!==-dir.y){dir=k;next=k;}
+      msg.textContent="Погнали!";
+      return;
+    }
+    if(k.x!==-dir.x||k.y!==-dir.y)next=k;
+  }
+  up.onclick=()=>turn({x:0,y:-1});down.onclick=()=>turn({x:0,y:1});
+  left.onclick=()=>turn({x:-1,y:0});right.onclick=()=>turn({x:1,y:0});
+  again.onclick=reset;
+  const keys={ArrowUp:{x:0,y:-1},ArrowDown:{x:0,y:1},ArrowLeft:{x:-1,y:0},ArrowRight:{x:1,y:0},w:{x:0,y:-1},s:{x:0,y:1},a:{x:-1,y:0},d:{x:1,y:0}};
+  ctx.add(window,"keydown",e=>{
+    const k=keys[e.key]||keys[e.key.toLowerCase()];
+    if(!k)return;
+    e.preventDefault();turn(k);
+  });
+  ctx.every(120,step);
+  reset();
+}
+
+function mount2048(ctx){
+  const COL=["#fff6a8","#ffe96b","#ffe600","#d8ff3d","#b6ff00","#8ce000","#5ecb00","#39c400","#22a300","#0f8200","#0a5f00"];
+  const hud=h("div","hud","Очки: 0");
+  const msg=h("div","msg","Стрелки или свайпы по полю");
+  const grid=h("div","b2048");
+  const cells=[];
+  for(let i=0;i<16;i++){const s=h("div","cell");cells.push(s);grid.append(s);}
+  const again=h("button","btn","🔁 Заново");
+  ctx.area.append(hud,grid,msg,again);
+  let b,score,dead,won;
+  const colorFor=v=>COL[Math.min(10,Math.max(0,Math.round(Math.log2(v))-1))];
+  function empty(){const a=[];b.forEach((v,i)=>{if(!v)a.push(i);});return a;}
+  function addTile(){const e=empty();if(e.length)b[pick(e)]=Math.random()<0.9?2:4;}
+  function render(){
+    cells.forEach((cell,i)=>{
+      const v=b[i];
+      cell.textContent=v||"";
+      cell.style.background=v?colorFor(v):"#dff7a0";
+      cell.style.color=v>=256?"#fff":"#143300";
+      cell.style.fontSize=v>=1024?"20px":v>=128?"25px":"30px";
+    });
+    hud.textContent="Очки: "+score;
+  }
+  function canMove(){
+    if(empty().length)return true;
+    for(let r=0;r<4;r++)for(let col=0;col<4;col++){
+      const v=b[r*4+col];
+      if(col<3&&b[r*4+col+1]===v)return true;
+      if(r<3&&b[(r+1)*4+col]===v)return true;
+    }
+    return false;
+  }
+  function lines(d){
+    const res=[];
+    for(let i=0;i<4;i++){
+      const line=[];
+      for(let j=0;j<4;j++){
+        let r,col;
+        if(d===0){r=i;col=j;}
+        else if(d===1){r=i;col=3-j;}
+        else if(d===2){r=j;col=i;}
+        else{r=3-j;col=i;}
+        line.push(r*4+col);
+      }
+      res.push(line);
+    }
+    return res;
+  }
+  function move(d){
+    if(dead)return;
+    let moved=false;
+    lines(d).forEach(line=>{
+      const vals=line.map(i=>b[i]).filter(v=>v);
+      const out=[];
+      for(let i=0;i<vals.length;i++){
+        if(vals[i]===vals[i+1]){out.push(vals[i]*2);score+=vals[i]*2;i++;}
+        else out.push(vals[i]);
+      }
+      while(out.length<4)out.push(0);
+      line.forEach((idx,i)=>{if(b[idx]!==out[i])moved=true;b[idx]=out[i];});
+    });
+    if(moved){addTile();render();}
+    if(!won&&b.indexOf(2048)>=0){won=true;msg.textContent="🎉 ТЫ СОБРАЛ 2048!!! Круто!";ctx.save(score);}
+    if(!canMove()){dead=true;msg.textContent="😵 Ходов нет! Очки: "+score+" — жми «Заново»";ctx.save(score);}
+  }
+  function reset(){
+    b=new Array(16).fill(0);score=0;dead=false;won=false;
+    addTile();addTile();render();msg.textContent="Стрелки или свайпы по полю";
+  }
+  again.onclick=reset;
+  const keys={ArrowLeft:0,a:0,ArrowRight:1,d:1,ArrowUp:2,w:2,ArrowDown:3,s:3};
+  ctx.add(window,"keydown",e=>{
+    const d=keys[e.key]!==undefined?keys[e.key]:keys[e.key.toLowerCase()];
+    if(d===undefined)return;
+    e.preventDefault();move(d);
+  });
+  let sx=0,sy=0;
+  ctx.add(grid,"touchstart",e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;},{passive:true});
+  ctx.add(grid,"touchend",e=>{
+    const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;
+    if(Math.abs(dx)<20&&Math.abs(dy)<20)return;
+    move(Math.abs(dx)>Math.abs(dy)?(dx>0?1:0):(dy>0?3:2));
+  });
+  reset();
+}
+function mountReaction(ctx){
+  const best=store.get("reaction",null);
+  const hud=h("div","hud","Лучшее время: "+(best==null?"—":best+" мс"));
+  const box=h("div","react","Нажми «СТАРТ»");
+  const btn=h("button","btn green","СТАРТ");
+  const msg=h("div","msg","Жми на квадрат, когда он станет зелёным. Рано — не считается.");
+  let state="idle",t0=0;
+  function arm(){
+    if(state==="go")return;
+    state="wait";
+    box.className="react wait";
+    box.textContent="ЖДИ ЗЕЛЁНОГО...";
+    ctx.later(900+Math.random()*2600,()=>{
+      if(state!=="wait")return;
+      state="go";t0=performance.now();
+      box.className="react go";box.textContent="ЖМИ!!!";
+    });
+  }
+  box.onclick=()=>{
+    if(state==="idle"){arm();return;}
+    if(state==="wait"){state="idle";box.className="react bad";box.textContent="😡 Рано! Ещё раз";return;}
+    if(state==="go"){
+      const ms=Math.round(performance.now()-t0);
+      state="idle";box.className="react ok";box.textContent=ms+" мс";
+      ctx.save(ms);
+      const b2=store.get("reaction",null);
+      hud.textContent="Лучшее время: "+b2+" мс";
+      msg.textContent=ms<200?"⚡ Это очень быстро!":ms<350?"Хорошая реакция!":ms<600?"Нормально, можно быстрее.":"Медленно... попробуй ещё!";
+    }
+  };
+  btn.onclick=arm;
+  const g=h("div","g");
+  g.append(hud,box,btn,msg);
+  ctx.area.append(g);
+}
+
+function mountGuess(ctx){
+  let target=rnd(100)+1,tries=0,done=false;
+  const hud=h("div","hud","Я загадал число от 1 до 100");
+  const inp=document.createElement("input");
+  inp.type="number";inp.min="1";inp.max="100";inp.placeholder="твоё число";inp.className="inp";
+  const btn=h("button","btn green","ПРОВЕРИТЬ");
+  const msg=h("div","msg","Попыток: 0");
+  const row=h("div","row");row.append(inp,btn);
+  const again=h("button","btn","🔁 Новая игра");
+  const g=h("div","g");g.append(hud,row,msg,again);
+  ctx.area.append(g);
+  function check(){
+    if(done)return;
+    const v=Number(inp.value);
+    if(!v||v<1||v>100){msg.textContent="Введи число от 1 до 100!";return;}
+    tries++;
+    if(v===target){done=true;btn.disabled=true;msg.textContent="🎉 УГАДАЛ за "+tries+" попыток!";ctx.save(tries);}
+    else msg.textContent=(v<target?"📈 Больше! ":"📉 Меньше! ")+"Попыток: "+tries;
+    inp.value="";inp.focus();
+  }
+  btn.onclick=check;
+  ctx.add(inp,"keydown",e=>{if(e.key==="Enter")check();});
+  again.onclick=()=>{
+    target=rnd(100)+1;tries=0;done=false;btn.disabled=false;
+    msg.textContent="Попыток: 0";inp.value="";inp.focus();
+  };
+  inp.focus();
+}
+
+function mountMines(ctx){
+  const N=8,MINES=10;
+  const hud=h("div","hud","💣 10 мин");
+  const grid=h("div","ms");
+  const modeBtn=h("button","btn","🚩 Режим флажка: ВЫКЛ");
+  const msg=h("div","msg","Клик — открыть, правая кнопка — флаг");
+  const again=h("button","btn","🔁 Заново");
+  const g=h("div","g");g.append(hud,grid,msg,modeBtn,again);
+  ctx.area.append(g);
+  let mine,open,flag,dead,flagMode=false;
+  const cells=[];
+  for(let i=0;i<N*N;i++){
+    const cell=h("button","mcell");
+    cell.dataset.i=i;cell.type="button";
+    cells.push(cell);grid.append(cell);
+  }
+  function nb(i){
+    const r=Math.floor(i/N),c=i%N,res=[];
+    for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){
+      if(!dr&&!dc)continue;
+      const rr=r+dr,cc=c+dc;
+      if(rr<0||cc<0||rr>=N||cc>=N)continue;
+      res.push(rr*N+cc);
+    }
+    return res;
+  }
+  const count=i=>nb(i).filter(j=>mine[j]).length;
+  function render(){
+    let flags=0;
+    cells.forEach((cell,i)=>{
+      if(flag[i])flags++;
+      cell.className="mcell";
+      if(!open[i]){cell.textContent=flag[i]?"🚩":"";return;}
+      if(mine[i]){cell.textContent="💥";cell.classList.add("boom");return;}
+      cell.classList.add("open");
+      const n=count(i);
+      cell.textContent=n?n:"";
+      cell.style.color=n===1?"#0a5f00":n===2?"#c47f00":n===3?"#d10000":"#5b2a86";
+    });
+    hud.textContent="💣 10 мин · 🚩 "+flags;
+  }
+  function reveal(i){
+    if(open[i]||flag[i])return;
+    open[i]=true;
+    if(!mine[i]&&count(i)===0)nb(i).forEach(j=>{if(!mine[j])reveal(j);});
+  }
+  function lose(){
+    dead=true;
+    for(let i=0;i<N*N;i++)if(mine[i])open[i]=true;
+    render();
+    msg.textContent="💥 БУМ! Попробуй ещё раз";
+  }
+  function checkWin(){
+    for(let i=0;i<N*N;i++)if(!open[i]&&!mine[i])return;
+    dead=true;
+    msg.textContent="🎉 ПОБЕДА! Ты настоящий сапёр!";
+    const w=store.get("mines",0)+1;
+    ctx.save(w);
+  }
+  function toggle(i){
+    if(dead||open[i])return;
+    flag[i]=!flag[i];render();
+  }
+  grid.onclick=e=>{
+    const t=e.target.closest(".mcell");
+    if(!t||dead)return;
+    const i=Number(t.dataset.i);
+    if(flagMode){toggle(i);return;}
+    if(flag[i])return;
+    if(mine[i]){open[i]=true;lose();return;}
+    reveal(i);render();checkWin();
+  };
+  grid.oncontextmenu=e=>{
+    e.preventDefault();
+    const t=e.target.closest(".mcell");
+    if(!t||dead)return;
+    toggle(Number(t.dataset.i));
+  };
+  modeBtn.onclick=()=>{
+    flagMode=!flagMode;
+    modeBtn.textContent="🚩 Режим флажка: "+(flagMode?"ВКЛ":"ВЫКЛ");
+    modeBtn.className="btn"+(flagMode?" green":"");
+  };
+  function reset(){
+    mine=new Array(N*N).fill(false);open=new Array(N*N).fill(false);flag=new Array(N*N).fill(false);
+    dead=false;
+    let placed=0;
+    while(placed<MINES){const i=rnd(N*N);if(!mine[i]){mine[i]=true;placed++;}}
+    render();msg.textContent="Клик — открыть, правая кнопка — флаг";
+  }
+  again.onclick=reset;
+  reset();
+}
+
+function mountHangman(ctx){
+  const WORDS=["СОБАКА","ШКОЛА","АРБУЗ","КОМПЬЮТЕР","МОРОЖЕНОЕ","ФУТБОЛ","ДИНОЗАВР","РОБОТ","ПИЦЦА","ГИТАРА","БАБОЧКА","ТЕЛЕФОН","КОСМОС","ПЕЛЬМЕНИ","СНЕГОВИК"];
+  const ABC="АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ".split("");
+  const STAGES=["🙂","😯","😰","😨","😱","💀"];
+  const stage=h("div","food","🙂");
+  const wordEl=h("div","hangword");
+  const msg=h("div","msg","Угадай слово по буквам. Ошибок можно 6.");
+  const kb=h("div","kb");
+  const again=h("button","btn","🔁 Новое слово");
+  ctx.area.append(stage,wordEl,msg,kb,again);
+  let word="",used=new Set(),wrong=0,lost=false,won=false;
+  const keys=[];
+  ABC.forEach(ch=>{
+    const b=h("button","",ch);b.type="button";
+    b.onclick=()=>guess(ch);
+    keys.push(b);kb.append(b);
+  });
+  function render(){
+    wordEl.textContent="";
+    for(const ch of word){
+      const s=h("span",used.has(ch)?"":"",used.has(ch)?ch:"");
+      wordEl.append(s);
+    }
+    stage.textContent=STAGES[Math.min(wrong,5)];
+  }
+  function finish(){
+    const all=[...word].every(ch=>used.has(ch));
+    if(all){
+      won=true;lost=true;
+      msg.textContent="🎉 УГАДАЛ! Слово: "+word;
+      ctx.save(store.get("hangman",0)+1);
+    }else if(wrong>=6){
+      lost=true;
+      msg.textContent="💀 Проиграл! Слово было: "+word;
+      wordEl.textContent="";
+      for(const ch of word)wordEl.append(h("span","",ch));
+    }
+  }
+  function guess(ch){
+    if(lost||used.has(ch))return;
+    used.add(ch);
+    const b=keys[ABC.indexOf(ch)];
+    if(word.indexOf(ch)>=0)b.className="hit";
+    else{b.className="miss";wrong++;}
+    b.disabled=true;
+    render();finish();
+  }
+  function reset(){
+    word=pick(WORDS);used=new Set();wrong=0;lost=false;won=false;
+    keys.forEach(b=>{b.className="";b.disabled=false;});
+    msg.textContent="Угадай слово по буквам. Ошибок можно 6.";
+    render();
+  }
+  again.onclick=reset;
+  reset();
+}
+function mountTtt(ctx){
+  const hud=h("div","hud","Ты — ❌, компьютер — ⭕");
+  const grid=h("div","ttt");
+  const msg=h("div","msg","Твой ход! Нажми на клетку.");
+  const again=h("button","btn","🔁 Новая игра");
+  const g=h("div","g");g.append(hud,grid,msg,again);
+  ctx.area.append(g);
+  const WINS=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  let b,over,cells=[];
+  for(let i=0;i<9;i++){
+    const btn=h("button","","");btn.type="button";
+    btn.onclick=()=>human(i);
+    cells.push(btn);grid.append(btn);
+  }
+  function winner(t){
+    for(const [a,c,d] of WINS){
+      if(t[a]&&t[a]===t[c]&&t[a]===t[d])return t[a];
+    }
+    return null;
+  }
+  function render(){
+    cells.forEach((c,i)=>{c.textContent=b[i]||"";c.style.color=b[i]==="X"?"#1a8a00":"#c47f00";});
+  }
+  function moveAt(i,p){b[i]=p;}
+  function aiMove(){
+    const empty=[];
+    for(let i=0;i<9;i++)if(!b[i])empty.push(i);
+    if(!empty.length)return;
+    for(const i of empty){const t=b.slice();t[i]="O";if(winner(t)==="O")return moveAt(i,"O");}
+    for(const i of empty){const t=b.slice();t[i]="X";if(winner(t)==="X")return moveAt(i,"O");}
+    if(!b[4])return moveAt(4,"O");
+    const corners=[0,2,6,8].filter(i=>!b[i]);
+    if(corners.length)return moveAt(pick(corners),"O");
+    if(!b[1]||!b[3]||!b[5]||!b[7]){const e=[1,3,5,7].filter(i=>!b[i]);return moveAt(pick(e),"O");}
+    moveAt(pick(empty),"O");
+  }
+  function check(){
+    const w=winner(b);
+    if(w){over=true;render();msg.textContent=w==="X"?"🎉 Ты выиграл! Красавчик!":"😈 Компьютер выиграл!";if(w==="X")ctx.save(store.get("ttt",0)+1);return true;}
+    if(b.every(v=>v)){over=true;msg.textContent="🤝 Ничья!";return true;}
+    return false;
+  }
+  function human(i){
+    if(over||b[i])return;
+    b[i]="X";render();
+    if(check())return;
+    aiMove();render();
+    if(check())return;
+    msg.textContent="Твой ход! Нажми на клетку.";
+  }
+  function reset(){
+    b=new Array(9).fill("");over=false;
+    render();msg.textContent="Твой ход! Нажми на клетку.";
+  }
+  again.onclick=reset;
+  reset();
+}
+
+function mountMemory(ctx){
+  const ICONS=["🍕","🚀","🐱","⚽","🎸","🌈","👾","🍩"];
+  const hud=h("div","hud","Ходы: 0");
+  const msg=h("div","msg","Найди все пары одинаковых картинок");
+  const grid=h("div","mem");
+  const again=h("button","btn","🔁 Заново");
+  const g=h("div","g");g.append(hud,grid,msg,again);
+  ctx.area.append(g);
+  let deck,flipped,moves,matched,lock,cells=[];
+  for(let i=0;i<16;i++){
+    const btn=h("button","","❓");btn.type="button";
+    btn.onclick=()=>flip(i);
+    cells.push(btn);grid.append(btn);
+  }
+  function render(){
+    cells.forEach((c,i)=>{
+      const shown=deck[i]&&(deck[i].open||deck[i].done);
+      c.textContent=shown?deck[i].icon:"❓";
+      c.className=deck[i]&&deck[i].done?"done":deck[i]&&deck[i].open?"up":"";
+    });
+    hud.textContent="Ходы: "+moves;
+  }
+  function flip(i){
+    if(lock||!deck[i]||deck[i].done||deck[i].open)return;
+    deck[i].open=true;moves++;render();
+    const openCards=deck.filter(c=>c.open&&!c.done);
+    if(openCards.length===2){
+      const [a,c]=openCards;
+      if(a.icon===c.icon){
+        a.done=c.done=true;
+        matched+=2;
+        render();
+        if(matched===16){msg.textContent="🎉 Все пары найдены за "+moves+" ходов!";ctx.save(moves);}
+      }else{
+        lock=true;
+        ctx.later(750,()=>{
+          a.open=c.open=false;lock=false;render();
+        });
+      }
+    }
+  }
+  function reset(){
+    deck=shuffle(ICONS.concat(ICONS)).map(icon=>({icon,open:false,done:false}));
+    moves=0;matched=0;lock=false;
+    msg.textContent="Найди все пары одинаковых картинок";
+    render();
+  }
+  again.onclick=reset;
+  reset();
+}
+
+function mountPuzzle(ctx){
+  const hud=h("div","hud","Ходы: 0");
+  const msg=h("div","msg","Переставь числа по порядку: 1 2 3 / 4 5 6 / 7 8 пусто");
+  const grid=h("div","puz");
+  const again=h("button","btn","🔁 Перемешать");
+  const g=h("div","g");g.append(hud,grid,msg,again);
+  ctx.area.append(g);
+  let t,blank,moves,solved=false,cells=[];
+  for(let i=0;i<9;i++){
+    const btn=h("button","","");btn.type="button";
+    btn.onclick=()=>tap(i);
+    cells.push(btn);grid.append(btn);
+  }
+  function neighbors(i){
+    const r=Math.floor(i/3),c=i%3,res=[];
+    if(r>0)res.push(i-3);
+    if(r<2)res.push(i+3);
+    if(c>0)res.push(i-1);
+    if(c<2)res.push(i+1);
+    return res;
+  }
+  function render(){
+    cells.forEach((c,i)=>{
+      c.textContent=t[i]?t[i]:"";
+      c.className=t[i]?"":"blank";
+    });
+    hud.textContent="Ходы: "+moves;
+  }
+  function tap(i){
+    if(solved)return;
+    if(neighbors(i).indexOf(blank)<0)return;
+    t[blank]=t[i];t[i]=0;blank=i;moves++;
+    render();checkWin();
+  }
+  function checkWin(){
+    for(let i=0;i<8;i++)if(t[i]!==i+1)return;
+    if(t[8]!==0)return;
+    solved=true;
+    msg.textContent="🎉 СОБРАЛ! За "+moves+" ходов!";
+    ctx.save(moves);
+  }
+  function reset(){
+    t=[1,2,3,4,5,6,7,8,0];blank=8;moves=0;solved=false;
+    for(let k=0;k<400;k++){
+      const opts=neighbors(blank);
+      const j=pick(opts);
+      t[blank]=t[j];t[j]=0;blank=j;
+    }
+    render();msg.textContent="Переставь числа по порядку: 1 2 3 / 4 5 6 / 7 8 пусто";
+  }
+  again.onclick=reset;
+  reset();
+}
+function mountCatch(ctx){
+  const H=340;
+  const hud=h("div","hud","Счёт: 0 · ❤️❤️❤️");
+  const msg=h("div","msg","Лови еду корзинкой! 3 промаха — конец.");
+  const field=h("div","catch");
+  field.style.height=H+"px";
+  const basket=h("div","basket","🧺");
+  field.append(basket);
+  const again=h("button","btn","🔁 Заново");
+  const g=h("div","g");g.append(hud,field,msg,again);
+  ctx.area.append(g);
+  let W=field.clientWidth||320;
+  let items=[],score=0,lives=3,over=false,bx=W/2-28,acc=0,last=0;
+  basket.style.left=bx+"px";
+  function place(){
+    basket.style.left=bx+"px";
+  }
+  function spawn(){
+    if(items.length>=12)return;
+    const x=16+Math.random()*(W-32);
+    const e=h("div","fruit",pick(["🍎","🍋","🍇","🍒","🍊","🥝","🍌","🍓"]));
+    e.style.left=(x-15)+"px";e.style.top="-30px";
+    field.append(e);
+    items.push({x,y:-30,e,v:110+Math.random()*70+score*1.5});
+  }
+  function paint(){
+    hud.textContent="Счёт: "+score+" · "+"❤️".repeat(Math.max(0,lives));
+  }
+  function tick(ts){
+    if(!last)last=ts;
+    const dt=Math.min(60,ts-last)/1000;last=ts;
+    if(!over){
+      acc+=dt;
+      const gap=Math.max(0.34,0.8-score*0.004);
+      if(acc>gap){acc=0;spawn();}
+    }
+    for(let i=items.length-1;i>=0;i--){
+      const it=items[i];
+      it.y+=it.v*dt;
+      it.e.style.top=it.y+"px";
+      if(it.y>H-52&&it.y<H-12&&Math.abs(it.x-(bx+28))<34){
+        items.splice(i,1);it.e.remove();
+        score+=10;paint();
+        continue;
+      }
+      if(it.y>H-4){
+        items.splice(i,1);it.e.remove();
+        lives--;paint();
+        if(lives<=0&&!over){
+          over=true;
+          msg.textContent="💀 Игра окончена! Счёт: "+score+" — жми «Заново»";
+          ctx.save(score);
+        }
+      }
+    }
+  }
+  ctx.raf(tick);
+  ctx.add(field,"pointermove",e=>{
+    const r=field.getBoundingClientRect();
+    W=field.clientWidth||W;
+    bx=Math.max(0,Math.min(W-56,e.clientX-r.left-28));
+    place();
+  });
+  again.onclick=()=>{
+    items.forEach(it=>it.e.remove());
+    items=[];score=0;lives=3;over=false;acc=0;
+    msg.textContent="Лови еду корзинкой! 3 промаха — конец.";
+    paint();
+  };
+  paint();
+}
+
+function mountQuiz(ctx){
+  const Q=[
+    {q:"Сколько будет 7 × 8?",a:["54","56","49","64"],c:1},
+    {q:"Сколько планет в Солнечной системе?",a:["7","9","8","10"],c:2},
+    {q:"В какой игре надо строить из блоков?",a:["Тетрис","Сапёр","2048","Майнкрафт"],c:3},
+    {q:"Какая планета самая большая?",a:["Юпитер","Марс","Земля","Сатурн"],c:0},
+    {q:"Кто быстрее всех бегает?",a:["Лев","Гепард","Лошадь","Страус"],c:1},
+    {q:"Сколько будет 2 в 10-й степени?",a:["512","100","2048","1024"],c:3},
+    {q:"Сколько сторон у шестиугольника?",a:["5","7","6","8"],c:2},
+    {q:"Каким газом мы дышим?",a:["Кислород","Азот","Водород","Гелий"],c:0}
+  ];
+  const hud=h("div","hud","Вопрос 1 из "+Q.length);
+  const qEl=h("div","quiz-q","");
+  const aEl=h("div","quiz-a");
+  const msg=h("div","msg","Выбери правильный ответ");
+  const again=h("button","btn","🔁 Заново");
+  const g=h("div","g");g.append(hud,qEl,aEl,msg,again);
+  ctx.area.append(g);
+  let i=0,score=0,locked=false;
+  function show(){
+    const item=Q[i];
+    hud.textContent="Вопрос "+(i+1)+" из "+Q.length+" · очки: "+score;
+    qEl.textContent=item.q;
+    aEl.textContent="";
+    locked=false;
+    item.a.forEach((text,idx)=>{
+      const b=h("button","",text);b.type="button";
+      b.onclick=()=>answer(idx,b);
+      aEl.append(b);
+    });
+  }
+  function answer(idx,btn){
+    if(locked)return;
+    locked=true;
+    const item=Q[i];
+    [...aEl.children].forEach(c=>c.disabled=true);
+    if(idx===item.c){btn.classList.add("good");score++;}
+    else{
+      btn.classList.add("bad");
+      aEl.children[item.c].classList.add("good");
+    }
+    msg.textContent=idx===item.c?"Верно! ✅":"Не угадал ❌";
+    ctx.later(850,()=>{
+      i++;
+      if(i<Q.length){msg.textContent="Выбери правильный ответ";show();}
+      else{
+        qEl.textContent="Результат: "+score+" из "+Q.length+" "+ (score===Q.length?"🏆 Ты гений!":score>=6?"👍 Отлично!":score>=4?"Норм, но можно лучше.":"Надо подучить... 😅");
+        hud.textContent="Викторина пройдена";
+        aEl.textContent="";
+        msg.textContent="";
+        ctx.save(score);
+      }
+    });
+  }
+  again.onclick=()=>{i=0;score=0;msg.textContent="Выбери правильный ответ";show();};
+  show();
+}
+
+function mountAirplane(ctx){
+  const W=320,H=420;
+  const cv=document.createElement("canvas");
+  cv.width=W;cv.height=H;cv.className="cv";
+  const c=cv.getContext("2d");
+  const hud=h("div","hud","Счёт: 0 · ❤️❤️❤️");
+  const msg=h("div","msg","← → или мышь/палец. Стреляет само!");
+  const again=h("button","btn","🔁 Заново");
+  ctx.area.append(hud,cv,msg,again);
+  const keys={l:false,r:false};
+  let px,py,bullets,enemies,score,lives,over,last,fire,spawn;
+  function reset(){
+    px=W/2;py=H-40;bullets=[];enemies=[];score=0;lives=3;over=false;
+    last=0;fire=0;spawn=0;
+    hud.textContent="Счёт: 0 · ❤️❤️❤️";
+    msg.textContent="← → или мышь/палец. Стреляет само!";
+  }
+  function draw(){
+    const sky=c.createLinearGradient(0,0,0,H);
+    sky.addColorStop(0,"#0b2b00");sky.addColorStop(1,"#1e5c00");
+    c.fillStyle=sky;c.fillRect(0,0,W,H);
+    c.fillStyle="rgba(180,255,0,.18)";
+    for(let i=0;i<26;i++){
+      const y=(i*67+Math.floor(performance.now()/12))%H;
+      c.fillRect((i*53)%W,y,2,6);
+    }
+    c.fillStyle="#eaff3d";
+    c.beginPath();c.moveTo(px,py-22);c.lineTo(px-9,py+6);c.lineTo(px+9,py+6);c.closePath();c.fill();
+    c.fillRect(px-18,py+2,36,6);
+    c.fillStyle="#c8ff00";
+    bullets.forEach(b=>c.fillRect(b.x-2,b.y-10,4,12));
+    enemies.forEach(e=>{
+      c.fillStyle="#ff4d4d";
+      c.beginPath();c.moveTo(e.x,e.y+16);c.lineTo(e.x-14,e.y-12);c.lineTo(e.x+14,e.y-12);c.closePath();c.fill();
+      c.fillStyle="#7a0000";c.fillRect(e.x-14,e.y-14,28,5);
+    });
+  }
+  function loop(ts){
+    if(!last)last=ts;
+    const dt=Math.min(50,ts-last)/1000;last=ts;
+    if(!over){
+      const dir=(keys.r?1:0)-(keys.l?1:0);
+      px+=dir*330*dt;
+      px=Math.max(20,Math.min(W-20,px));
+      fire+=dt;
+      if(fire>0.33){fire=0;bullets.push({x:px,y:py-20});}
+      spawn+=dt;
+      if(spawn>Math.max(0.45,1.1-score*0.004)){
+        spawn=0;
+        enemies.push({x:30+Math.random()*(W-60),y:-20,v:85+Math.random()*70+score*0.7});
+      }
+    }
+    bullets.forEach(b=>{b.y-=540*dt;});
+    bullets=bullets.filter(b=>b.y>-16);
+    enemies.forEach(e=>{e.y+=e.v*dt;});
+    for(let i=enemies.length-1;i>=0;i--){
+      const e=enemies[i];
+      let killed=false;
+      for(let j=bullets.length-1;j>=0;j--){
+        if(Math.abs(bullets[j].x-e.x)<16&&Math.abs(bullets[j].y-e.y)<16){
+          bullets.splice(j,1);killed=true;break;
+        }
+      }
+      if(killed){
+        enemies.splice(i,1);score+=10;
+        hud.textContent="Счёт: "+score+" · "+"❤️".repeat(lives);
+        continue;
+      }
+      if(e.y>py-30&&e.y<py+30&&Math.abs(e.x-px)<26){
+        enemies.splice(i,1);lives--;
+        hud.textContent="Счёт: "+score+" · "+"❤️".repeat(Math.max(0,lives));
+        if(lives<=0){over=true;msg.textContent="💥 Сбит! Счёт: "+score+" — жми «Заново»";ctx.save(score);}
+      }else if(e.y>H+40)enemies.splice(i,1);
+    }
+    draw();
+  }
+  cv.addEventListener("pointerdown",e=>{
+    const r=cv.getBoundingClientRect();
+    px=Math.max(20,Math.min(W-20,(e.clientX-r.left)*(W/r.width)));
+  });
+  ctx.add(cv,"pointermove",e=>{
+    if(e.buttons!==1&&e.pointerType==="mouse")return;
+    const r=cv.getBoundingClientRect();
+    px=Math.max(20,Math.min(W-20,(e.clientX-r.left)*(W/r.width)));
+  });
+  ctx.add(window,"keydown",e=>{
+    if(e.key==="ArrowLeft"||e.key==="a"||e.key==="ф"){keys.l=true;e.preventDefault();}
+    if(e.key==="ArrowRight"||e.key==="d"||e.key==="в"){keys.r=true;e.preventDefault();}
+  });
+  ctx.add(window,"keyup",e=>{
+    if(e.key==="ArrowLeft"||e.key==="a"||e.key==="ф")keys.l=false;
+    if(e.key==="ArrowRight"||e.key==="d"||e.key==="в")keys.r=false;
+  });
+  again.onclick=reset;
+  ctx.raf(loop);
+  reset();
+}
+
+function mountZombie(ctx){
+  const W=360,H=360;
+  const cv=document.createElement("canvas");
+  cv.width=W;cv.height=H;cv.className="cv";
+  const c=cv.getContext("2d");
+  const hud=h("div","hud","Убито зомби: 0 · ❤️❤️❤️");
+  const msg=h("div","msg","WASD / стрелки или веди мышью. Стреляет само!");
+  const again=h("button","btn","🔁 Заново");
+  ctx.area.append(hud,cv,msg,again);
+  let px,py,hp,kills,bullets,zomb,over,last,fire,spawn,time,tx,ty,hasTarget;
+  function reset(){
+    px=W/2;py=H/2;hp=3;kills=0;bullets=[];zomb=[];
+    over=false;last=0;fire=0;spawn=0;time=0;tx=0;ty=0;hasTarget=false;
+    hud.textContent="Убито зомби: 0 · ❤️❤️❤️";
+    msg.textContent="WASD / стрелки или веди мышью. Стреляет само!";
+  }
+  function aim(){
+    let best=null,bd=1e9;
+    for(const z of zomb){
+      const d=Math.hypot(z.x-px,z.y-py);
+      if(d<bd){bd=d;best=z;}
+    }
+    return best;
+  }
+  function loop(ts){
+    if(!last)last=ts;
+    const dt=Math.min(50,ts-last)/1000;last=ts;
+    if(!over){
+      time+=dt;
+      let dx=0,dy=0;
+      if(hasTarget){
+        const ax=tx-px,ay=ty-py,d=Math.hypot(ax,ay);
+        if(d>6){dx=ax/d;dy=ay/d;}
+      }else{
+        dx=(keys.r?1:0)-(keys.l?1:0);
+        dy=(keys.d?1:0)-(keys.u?1:0);
+        const d=Math.hypot(dx,dy);
+        if(d){dx/=d;dy/=d;}
+      }
+      px=Math.max(14,Math.min(W-14,px+dx*175*dt));
+      py=Math.max(14,Math.min(H-14,py+dy*175*dt));
+      fire+=dt;
+      if(fire>0.42){
+        fire=0;
+        const t=aim();
+        if(t){
+          const ax=t.x-px,ay=t.y-py,d=Math.hypot(ax,ay)||1;
+          bullets.push({x:px,y:py,vx:ax/d*430,vy:ay/d*430});
+        }
+      }
+      spawn+=dt;
+      if(spawn>Math.max(0.45,1.5-time*0.03)){
+        spawn=0;
+        const side=rnd(4);
+        const zx=side===0?rnd(W):side===1?0:side===2?W:rnd(W);
+        const zy=side===0?0:side===1?rnd(H):side===2?rnd(H):H;
+        zomb.push({x:zx,y:zy,v:30+time*1.6+Math.random()*12});
+      }
+      bullets.forEach(b=>{b.x+=b.vx*dt;b.y+=b.vy*dt;});
+      bullets=bullets.filter(b=>b.x>0&&b.x<W&&b.y>0&&b.y<H);
+      for(const z of zomb){
+        const ax=px-z.x,ay=py-z.y,d=Math.hypot(ax,ay)||1;
+        z.x+=ax/d*z.v*dt;z.y+=ay/d*z.v*dt;
+      }
+      for(let i=zomb.length-1;i>=0;i--){
+        const z=zomb[i];
+        let dead=false;
+        for(let j=bullets.length-1;j>=0;j--){
+          if(Math.hypot(bullets[j].x-z.x,bullets[j].y-z.y)<14){
+            bullets.splice(j,1);dead=true;break;
+          }
+        }
+        if(dead){zomb.splice(i,1);kills++;hud.textContent="Убито зомби: "+kills+" · "+"❤️".repeat(hp);continue;}
+        if(Math.hypot(z.x-px,z.y-py)<20){
+          zomb.splice(i,1);hp--;
+          hud.textContent="Убито зомби: "+kills+" · "+"❤️".repeat(Math.max(0,hp));
+          if(hp<=0){over=true;msg.textContent="🧟 Тебя съели! Зомби убито: "+kills+" — жми «Заново»";ctx.save(kills);}
+        }
+      }
+    }
+    c.fillStyle="#123300";c.fillRect(0,0,W,H);
+    c.strokeStyle="rgba(180,255,0,.08)";
+    for(let i=0;i<W;i+=40){
+      c.beginPath();c.moveTo(i,0);c.lineTo(i,H);c.stroke();
+      c.beginPath();c.moveTo(0,i);c.lineTo(W,i);c.stroke();
+    }
+    c.fillStyle="#c8ff00";
+    bullets.forEach(b=>{c.beginPath();c.arc(b.x,b.y,3,0,6.3);c.fill();});
+    zomb.forEach(z=>{
+      c.fillStyle="#a32626";
+      c.beginPath();c.arc(z.x,z.y,11,0,6.3);c.fill();
+      c.fillStyle="#2b0000";c.fillRect(z.x-6,z.y-3,4,4);c.fillRect(z.x+2,z.y-3,4,4);
+    });
+    c.fillStyle="#b6ff00";
+    c.beginPath();c.arc(px,py,11,0,6.3);c.fill();
+    c.strokeStyle="#143300";c.lineWidth=3;c.stroke();
+    c.fillStyle="#143300";
+    c.beginPath();c.arc(px-4,py-2,1.8,0,6.3);c.fill();
+    c.beginPath();c.arc(px+4,py-2,1.8,0,6.3);c.fill();
+    const t=aim();
+    if(t){
+      const ax=t.x-px,ay=t.y-py,d=Math.hypot(ax,ay)||1;
+      c.strokeStyle="#ffe600";c.lineWidth=2;
+      c.beginPath();c.moveTo(px,py);c.lineTo(px+ax/d*8,py+ay/d*8);c.stroke();
+    }
+    drawHud();
+  }
+  function drawHud(){
+    c.fillStyle="rgba(20,51,0,.7)";c.fillRect(0,0,W,26);
+    c.fillStyle="#d8ff5c";c.font="600 13px 'Segoe UI', Arial, sans-serif";
+    c.fillText("Зомби: "+kills+"   Живём: "+Math.floor(time)+" сек",10,18);
+  }
+  cv.addEventListener("pointerdown",e=>{
+    const r=cv.getBoundingClientRect();
+    tx=(e.clientX-r.left)*(W/r.width);ty=(e.clientY-r.top)*(H/r.height);hasTarget=true;
+  });
+  ctx.add(cv,"pointermove",e=>{
+    if(e.pointerType==="mouse"&&e.buttons!==1)return;
+    const r=cv.getBoundingClientRect();
+    tx=(e.clientX-r.left)*(W/r.width);ty=(e.clientY-r.top)*(H/r.height);hasTarget=true;
+  });
+  const keys={};
+  const codes={ArrowLeft:"l",ArrowRight:"r",ArrowUp:"u",ArrowDown:"d",a:"l",d:"r",w:"u",s:"d"};
+  ctx.add(window,"keydown",e=>{
+    const k=codes[e.key]||codes[e.key.toLowerCase()];
+    if(!k)return;
+    keys[k]=true;hasTarget=false;e.preventDefault();
+  });
+  ctx.add(window,"keyup",e=>{
+    const k=codes[e.key]||codes[e.key.toLowerCase()];
+    if(!k)return;
+    keys[k]=false;e.preventDefault();
+  });
+  again.onclick=reset;
+  ctx.raf(loop);
+  reset();
+}
+
+function mountFpv(ctx){
+  const W=420,H=300,FOV=W*0.95,HOR=H*0.44,GROUND=H*0.82;
+  const cv=document.createElement("canvas");
+  cv.width=W;cv.height=H;cv.className="cv";
+  const c=cv.getContext("2d");
+  const hud=h("div","hud","Дистанция: 0 м");
+  const msg=h("div","msg","Веди мышью или ← →: пролетай в проёмы между домами");
+  const again=h("button","btn","🔁 Заново");
+  ctx.area.append(hud,cv,msg,again);
+  const keys={l:false,r:false};
+  let droneX,targetX,dist,speed,houses,over,last,spawn;
+  function reset(){
+    droneX=0;targetX=0;dist=0;speed=26;houses=[];over=false;last=0;spawn=0;
+    hud.textContent="Дистанция: 0 м";
+    msg.textContent="Веди мышью или ← →: пролетай в проёмы между домами";
+    addGate(40);
+  }
+  function addGate(zStart){
+    const z=(zStart||70)+Math.random()*6;
+    const center=(Math.random()*2-1)*0.55;
+    const gap=1.05+Math.random()*0.4;
+    const L=-2.4,R=2.4;
+    houses.push({x:(L+center-gap/2)/2,w:(center-gap/2)-L,h:2.1+Math.random()*1.6,z:z});
+    houses.push({x:(center+gap/2+R)/2,w:R-(center+gap/2),h:2.1+Math.random()*1.6,z:z});
+  }
+  function draw(){
+    const sky=c.createLinearGradient(0,0,0,HOR);
+    sky.addColorStop(0,"#07130a");sky.addColorStop(1,"#12300c");
+    c.fillStyle=sky;c.fillRect(0,0,W,HOR);
+    const gr=c.createLinearGradient(0,HOR,0,H);
+    gr.addColorStop(0,"#1c3410");gr.addColorStop(1,"#0a1606");
+    c.fillStyle=gr;c.fillRect(0,HOR,W,H-HOR);
+    c.strokeStyle="rgba(182,255,0,.30)";c.lineWidth=1;
+    c.beginPath();c.moveTo(0,HOR);c.lineTo(W,HOR);c.stroke();
+    c.strokeStyle="rgba(182,255,0,.10)";
+    for(let i=-4;i<=4;i++){
+      c.beginPath();c.moveTo(W/2,HOR);c.lineTo(W/2+i*W*0.55,H);c.stroke();
+    }
+    for(let i=0;i<11;i++){
+      const d=((i*9-dist*0.9)%90+90)%90+2;
+      const y=HOR+(H-HOR)*(4/(d+4));
+      c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();
+    }
+    const list=houses.slice().sort((a,b)=>b.z-a.z);
+    for(const o of list){
+      if(o.z<0.6)continue;
+      const s=FOV/o.z;
+      const x=W/2+(o.x-droneX)*s;
+      const w=Math.max(1,o.w*s);
+      const top=GROUND-o.h*s*0.55;
+      const grad=c.createLinearGradient(0,top,0,GROUND);
+      grad.addColorStop(0,"#3a5f1d");grad.addColorStop(1,"#1b2e0a");
+      c.fillStyle=grad;
+      c.fillRect(x-w/2,top,w,GROUND-top);
+      c.strokeStyle="rgba(182,255,0,.65)";
+      c.strokeRect(x-w/2+0.5,top+0.5,Math.max(0,w-1),Math.max(0,GROUND-top-1));
+      if(o.z<24&&w<260){
+        c.fillStyle="rgba(230,255,150,.45)";
+        for(let wy=top+7;wy<GROUND-8;wy+=13){
+          for(let wx=x-w/2+6;wx<x+w/2-5;wx+=11)c.fillRect(wx,wy,2,3);
+        }
+      }
+    }
+    c.strokeStyle="rgba(182,255,0,.75)";c.lineWidth=1.5;
+    c.beginPath();
+    c.moveTo(W/2-9,H/2);c.lineTo(W/2+9,H/2);
+    c.moveTo(W/2,H/2-9);c.lineTo(W/2,H/2+9);
+    c.stroke();
+    c.fillStyle="rgba(0,0,0,.45)";c.fillRect(8,8,84,20);
+    c.fillStyle="#ff5a5a";c.beginPath();c.arc(20,18,4,0,6.3);c.fill();
+    c.fillStyle="#d8ff5c";c.font="600 11px 'Segoe UI', Arial, sans-serif";c.fillText("REC  FPV",30,22);
+    c.fillStyle="rgba(0,0,0,.45)";c.fillRect(W-104,8,96,20);
+    c.fillStyle="#d8ff5c";c.fillText(Math.round(speed*3.6)+" км/ч",W-96,22);
+  }
+  function loop(ts){
+    if(!last)last=ts;
+    const dt=Math.min(50,ts-last)/1000;last=ts;
+    if(!over){
+      speed=Math.min(62,26+dist*0.022);
+      dist+=speed*dt;
+      const dir=(keys.r?1:0)-(keys.l?1:0);
+      if(dir)targetX=Math.max(-1.4,Math.min(1.4,targetX+dir*1.6*dt));
+      droneX+=(targetX-droneX)*Math.min(1,dt*6);
+      spawn+=dt;
+      if(spawn>1.05){spawn=0;addGate();}
+      for(let i=houses.length-1;i>=0;i--){
+        const o=houses[i];
+        o.z-=speed*dt;
+        if(o.z<5&&o.z>0&&Math.abs(droneX-o.x)<o.w/2+0.05){
+          over=true;
+          msg.textContent="💥 Врезался! Пролетел "+Math.floor(dist)+" м — жми «Заново»";
+          ctx.save(Math.floor(dist));
+        }
+        if(o.z<-4)houses.splice(i,1);
+      }
+      hud.textContent="Дистанция: "+Math.floor(dist)+" м";
+    }
+    draw();
+  }
+  ctx.add(cv,"pointermove",e=>{
+    const r=cv.getBoundingClientRect();
+    targetX=Math.max(-1.4,Math.min(1.4,((e.clientX-r.left)/r.width*2-1)*1.35));
+  });
+  ctx.add(cv,"pointerdown",e=>{
+    const r=cv.getBoundingClientRect();
+    targetX=Math.max(-1.4,Math.min(1.4,((e.clientX-r.left)/r.width*2-1)*1.35));
+  });
+  ctx.add(window,"keydown",e=>{
+    if(e.key==="ArrowLeft"||e.key==="a"||e.key==="ф"){keys.l=true;e.preventDefault();}
+    if(e.key==="ArrowRight"||e.key==="d"||e.key==="в"){keys.r=true;e.preventDefault();}
+  });
+  ctx.add(window,"keyup",e=>{
+    if(e.key==="ArrowLeft"||e.key==="a"||e.key==="ф")keys.l=false;
+    if(e.key==="ArrowRight"||e.key==="d"||e.key==="в")keys.r=false;
+  });
+  again.onclick=reset;
+  ctx.raf(loop);
+  reset();
+}
+
+function mountAaa(ctx){
+  const W=420,H=320;
+  const cv=document.createElement("canvas");
+  cv.width=W;cv.height=H;cv.className="cv";
+  const c=cv.getContext("2d");
+  const hud=h("div","hud","Сбито: 0 · ❤️❤️❤️");
+  const msg=h("div","msg","Мышь — прицел, зажми ЛКМ — огонь. Сбивай дроны!");
+  const again=h("button","btn","🔁 Заново");
+  ctx.area.append(hud,cv,msg,again);
+  const TX=W/2,TY=H-26;
+  const keys={l:false,r:false};
+  let aimX,aimY,firing,bullets,drones,bombs,kills,hp,over,last,cool,spawnT,time;
+  function reset(){
+    aimX=W/2;aimY=H/2;firing=false;bullets=[];drones=[];bombs=[];
+    kills=0;hp=3;over=false;last=0;cool=0;spawnT=0.4;time=0;
+    hud.textContent="Сбито: 0 · ❤️❤️❤️";
+    msg.textContent="Мышь — прицел, зажми ЛКМ — огонь. Сбивай дроны!";
+  }
+  function addDrone(){
+    const fromLeft=Math.random()<0.5;
+    const y=38+Math.random()*135;
+    drones.push({
+      x:fromLeft?-30:W+30,y:y,baseY:y,
+      vx:(fromLeft?1:-1)*(55+Math.random()*45+kills*1.2),
+      phase:Math.random()*6.3,bt:1.5+Math.random()*2
+    });
+  }
+  function fire(){
+    const ang=Math.atan2(aimY-TY,aimX-TX);
+    bullets.push({
+      x:TX+Math.cos(ang)*22,y:TY+Math.sin(ang)*22,
+      vx:Math.cos(ang)*540,vy:Math.sin(ang)*540
+    });
+  }
+  function paint(){
+    hud.textContent="Сбито: "+kills+" · "+"❤️".repeat(Math.max(0,hp));
+  }
+  function draw(){
+    const sky=c.createLinearGradient(0,0,0,H);
+    sky.addColorStop(0,"#09180f");sky.addColorStop(1,"#1a3316");
+    c.fillStyle=sky;c.fillRect(0,0,W,H);
+    c.fillStyle="#12250c";c.fillRect(0,H-18,W,18);
+    for(let i=0;i<W;i+=28){
+      c.fillStyle="rgba(182,255,0,.06)";
+      c.fillRect(i,H-18,14,18);
+    }
+    const ang=Math.atan2(aimY-TY,aimX-TX);
+    c.save();c.translate(TX,TY);c.rotate(ang);
+    c.fillStyle="#7ec400";c.fillRect(0,-4,26,8);
+    c.restore();
+    c.fillStyle="#2f4a1c";c.beginPath();c.arc(TX,TY,13,0,6.3);c.fill();
+    c.strokeStyle="#b6ff00";c.lineWidth=2;c.stroke();
+    drones.forEach(d=>{
+      c.strokeStyle="#ff7a7a";c.lineWidth=2;
+      c.beginPath();
+      c.moveTo(d.x-9,d.y-7);c.lineTo(d.x+9,d.y+7);
+      c.moveTo(d.x+9,d.y-7);c.lineTo(d.x-9,d.y+7);
+      c.stroke();
+      c.fillStyle="#ff9d9d";c.beginPath();c.arc(d.x,d.y,4,0,6.3);c.fill();
+    });
+    c.fillStyle="#ffd34d";
+    bombs.forEach(b=>{c.beginPath();c.arc(b.x,b.y,3.5,0,6.3);c.fill();});
+    c.strokeStyle="#eaff3d";c.lineWidth=2;
+    bullets.forEach(b=>{
+      c.beginPath();c.moveTo(b.x,b.y);
+      c.lineTo(b.x-b.vx*0.02,b.y-b.vy*0.02);c.stroke();
+    });
+    c.strokeStyle="rgba(234,255,61,.9)";c.lineWidth=1;
+    c.beginPath();c.arc(aimX,aimY,10,0,6.3);c.stroke();
+    c.beginPath();
+    c.moveTo(aimX-14,aimY);c.lineTo(aimX-4,aimY);
+    c.moveTo(aimX+4,aimY);c.lineTo(aimX+14,aimY);
+    c.moveTo(aimX,aimY-14);c.lineTo(aimX,aimY-4);
+    c.moveTo(aimX,aimY+4);c.lineTo(aimX,aimY+14);
+    c.stroke();
+  }
+  function loop(ts){
+    if(!last)last=ts;
+    const dt=Math.min(50,ts-last)/1000;last=ts;
+    if(!over){
+      time+=dt;
+      if(keys.l)aimX-=230*dt;
+      if(keys.r)aimX+=230*dt;
+      aimX=Math.max(16,Math.min(W-16,aimX));
+      cool-=dt;
+      if(firing&&cool<=0){cool=0.16;fire();}
+      spawnT-=dt;
+      if(spawnT<=0){spawnT=Math.max(0.42,1.5-kills*0.03);addDrone();}
+      drones.forEach(d=>{
+        d.x+=d.vx*dt;
+        d.y=d.baseY+Math.sin(time*2.2+d.phase)*10;
+        d.bt-=dt;
+        if(d.bt<=0&&Math.abs(d.x-TX)<150&&d.x>10&&d.x<W-10){
+          d.bt=2.6+Math.random()*2;
+          bombs.push({x:d.x,y:d.y+10});
+        }
+      });
+      bullets.forEach(b=>{b.x+=b.vx*dt;b.y+=b.vy*dt;});
+      bullets=bullets.filter(b=>b.x>-10&&b.x<W+10&&b.y>-10&&b.y<H+10);
+      bombs.forEach(b=>{b.y+=115*dt;});
+      for(let i=drones.length-1;i>=0;i--){
+        const d=drones[i];
+        let hit=false;
+        for(let j=bullets.length-1;j>=0;j--){
+          if(Math.hypot(bullets[j].x-d.x,bullets[j].y-d.y)<16){
+            bullets.splice(j,1);hit=true;break;
+          }
+        }
+        if(hit){drones.splice(i,1);kills++;paint();}
+        else if(d.x<-40||d.x>W+40)drones.splice(i,1);
+      }
+      for(let i=bombs.length-1;i>=0;i--){
+        if(bombs[i].y>H-14){
+          const bx=bombs[i].x;
+          bombs.splice(i,1);
+          if(Math.abs(bx-TX)<70){
+            hp--;paint();
+            if(hp<=0){
+              over=true;
+              msg.textContent="💥 Позицию разбомбили! Сбито: "+kills+" — жми «Заново»";
+              ctx.save(kills);
+            }
+          }
+        }
+      }
+    }
+    draw();
+  }
+  function setAim(e){
+    const r=cv.getBoundingClientRect();
+    aimX=(e.clientX-r.left)*(W/r.width);
+    aimY=(e.clientY-r.top)*(H/r.height);
+  }
+  ctx.add(cv,"pointermove",setAim);
+  ctx.add(cv,"pointerdown",e=>{setAim(e);firing=true;});
+  ctx.add(window,"pointerup",()=>{firing=false;});
+  ctx.add(window,"keydown",e=>{
+    if(e.key==="ArrowLeft"||e.key==="a"||e.key==="ф"){keys.l=true;e.preventDefault();}
+    if(e.key==="ArrowRight"||e.key==="d"||e.key==="в"){keys.r=true;e.preventDefault();}
+    if(e.key===" "){firing=true;e.preventDefault();}
+  });
+  ctx.add(window,"keyup",e=>{
+    if(e.key==="ArrowLeft"||e.key==="a"||e.key==="ф")keys.l=false;
+    if(e.key==="ArrowRight"||e.key==="d"||e.key==="в")keys.r=false;
+    if(e.key===" ")firing=false;
+  });
+  again.onclick=reset;
+  ctx.raf(loop);
+  reset();
+}
+
+function mountSurvive(ctx){
+  const VW=420,VH=320,TW=32,MW=60,MH=45;
+  const WW=MW*TW,WH=MH*TW;
+  const cv=document.createElement("canvas");
+  cv.width=VW;cv.height=VH;cv.className="cv";
+  const c=cv.getContext("2d");
+  const hud=h("div","hud","❤️ 100 · 🛡 0 · 🔫 Пистолет · 💀 0");
+  const msg=h("div","msg","WASD/стрелки или веди мышью. Оружие стреляет само.");
+  const again=h("button","btn","🔁 Заново");
+  const g=h("div","g");g.append(hud,cv,msg,again);
+  ctx.area.append(g);
+  const WEAPONS=[
+    {name:"Дробовик",dmg:24,rate:0.95,range:150},
+    {name:"Автомат",dmg:10,rate:0.16,range:230},
+    {name:"Винтовка",dmg:32,rate:0.85,range:330},
+    {name:"Пулемёт",dmg:8,rate:0.11,range:240}
+  ];
+  let p,hp,armor,weapon,kills,crates,enemies,tracers,trees,over,last,cool,spawnT,crateT,contact,hasTarget,tx,ty;
+  const keys={};
+  function reset(){
+    p={x:WW/2,y:WH/2};
+    hp=100;armor=0;kills=0;enemies=[];tracers=[];
+    weapon={name:"Пистолет",dmg:9,rate:0.55,range:200};
+    over=false;last=0;cool=0;spawnT=2;crateT=8;contact=0;hasTarget=false;tx=p.x;ty=p.y;
+    crates=[];
+    for(let i=0;i<70;i++){
+      const cr={x:60+Math.random()*(WW-120),y:60+Math.random()*(WH-120),open:false};
+      if(Math.hypot(cr.x-p.x,cr.y-p.y)>120)crates.push(cr);
+    }
+    trees=[];
+    for(let i=0;i<150;i++)trees.push({x:Math.random()*WW,y:Math.random()*WH,r:10+Math.random()*10});
+    paint();
+    msg.textContent="WASD/стрелки или веди мышью. Оружие стреляет само.";
+  }
+  function paint(){
+    hud.textContent="❤️ "+Math.max(0,Math.round(hp))+" · 🛡 "+armor+" · 🔫 "+weapon.name+" · 💀 "+kills;
+  }
+  function log(text){
+    msg.textContent=text;
+  }
+  function openCrate(cr){
+    cr.open=true;
+    const r=Math.random();
+    if(r<0.06){
+      armor=50;
+      log("🛡 Нашёл ТОПОВУЮ броню «Титан»: +50 брони!");
+    }else if(r<0.21){
+      const w=pick(WEAPONS);
+      weapon=w;
+      log("🔫 Нашёл оружие: "+w.name+" (урон "+w.dmg+", дальность "+w.range+")");
+    }else{
+      const kind=pick(["Аптечка","Бинт","Консервы","Хлам"]);
+      if(kind==="Аптечка"){hp=Math.min(100,hp+30);log("💊 Аптечка: +30 HP");}
+      else if(kind==="Бинт"){hp=Math.min(100,hp+15);log("🩹 Бинт: +15 HP");}
+      else if(kind==="Консервы"){hp=Math.min(100,hp+10);log("🥫 Консервы: +10 HP");}
+      else log("🗑 В ящике только хлам...");
+    }
+    paint();
+  }
+  function nearest(){
+    let best=null,bd=weapon.range;
+    for(const e of enemies){
+      const d=Math.hypot(e.x-p.x,e.y-p.y);
+      if(d<bd){bd=d;best=e;}
+    }
+    return best;
+  }
+  function spawnEnemy(){
+    const a=Math.random()*6.283;
+    const rad=250+Math.random()*60;
+    enemies.push({
+      x:Math.max(20,Math.min(WW-20,p.x+Math.cos(a)*rad)),
+      y:Math.max(20,Math.min(WH-20,p.y+Math.sin(a)*rad)),
+      hp:18+kills*0.6,v:26+kills*0.5
+    });
+  }
+  function tileColor(mx,my){
+    const n=Math.sin(mx*12.9898+my*78.233)*43758.5453;
+    const f=n-Math.floor(n);
+    return f<0.5?"#1b3110":f<0.8?"#1f3713":"#172b0e";
+  }
+  function draw(){
+    let camX=Math.max(0,Math.min(WW-VW,p.x-VW/2));
+    let camY=Math.max(0,Math.min(WH-VH,p.y-VH/2));
+    const x0=Math.floor(camX/TW),x1=Math.ceil((camX+VW)/TW);
+    const y0=Math.floor(camY/TW),y1=Math.ceil((camY+VH)/TW);
+    for(let ty=y0;ty<y1;ty++){
+      for(let txx=x0;txx<x1;txx++){
+        c.fillStyle=tileColor(txx,ty);
+        c.fillRect(txx*TW-camX,ty*TW-camY,TW,TW);
+      }
+    }
+    trees.forEach(t=>{
+      if(t.x<camX-20||t.x>camX+VW+20||t.y<camY-20||t.y>camY+VH+20)return;
+      c.fillStyle="#10240a";
+      c.beginPath();c.arc(t.x-camX,t.y-camY,t.r,0,6.3);c.fill();
+      c.fillStyle="#183a0f";
+      c.beginPath();c.arc(t.x-camX-2,t.y-camY-2,t.r*0.7,0,6.3);c.fill();
+    });
+    crates.forEach(cr=>{
+      if(cr.x<camX-20||cr.x>camX+VW+20||cr.y<camY-20||cr.y>camY+VH+20)return;
+      const sx=cr.x-camX,sy=cr.y-camY;
+      c.fillStyle=cr.open?"#3a3218":"#8a6a2a";
+      c.fillRect(sx-9,sy-9,18,18);
+      c.strokeStyle=cr.open?"rgba(255,255,255,.15)":"#d8b25c";
+      c.lineWidth=2;c.strokeRect(sx-9,sy-9,18,18);
+      if(!cr.open){
+        c.beginPath();c.moveTo(sx-9,sy);c.lineTo(sx+9,sy);
+        c.moveTo(sx,sy-9);c.lineTo(sx,sy+9);c.stroke();
+      }
+    });
+    c.lineWidth=1.5;
+    tracers.forEach(tr=>{
+      c.strokeStyle="rgba(234,255,61,"+Math.max(0,tr.t*3)+")";
+      c.beginPath();c.moveTo(tr.x1-camX,tr.y1-camY);c.lineTo(tr.x2-camX,tr.y2-camY);c.stroke();
+    });
+    enemies.forEach(e=>{
+      const sx=e.x-camX,sy=e.y-camY;
+      c.fillStyle="#9c2b2b";
+      c.beginPath();c.arc(sx,sy,11,0,6.3);c.fill();
+      c.fillStyle="#2b0000";
+      c.fillRect(sx-6,sy-3,4,4);c.fillRect(sx+2,sy-3,4,4);
+      c.fillStyle="rgba(0,0,0,.5)";c.fillRect(sx-11,sy-18,22,3);
+      c.fillStyle="#ff6b6b";c.fillRect(sx-11,sy-18,22*Math.max(0,e.hp/(18+kills*0.6)),3);
+    });
+    const sx=p.x-camX,sy=p.y-camY;
+    const t=nearest();
+    let ang=t?Math.atan2(t.y-p.y,t.x-p.x):-Math.PI/2;
+    c.save();c.translate(sx,sy);c.rotate(ang);
+    c.fillStyle="#5c7a2a";c.fillRect(6,-2,12,4);
+    c.restore();
+    c.fillStyle="#b6ff00";c.beginPath();c.arc(sx,sy,10,0,6.3);c.fill();
+    c.strokeStyle="#143300";c.lineWidth=2;c.stroke();
+  }
+  function loop(ts){
+    if(!last)last=ts;
+    const dt=Math.min(50,ts-last)/1000;last=ts;
+    if(!over){
+      let dx=(keys.r?1:0)-(keys.l?1:0);
+      let dy=(keys.d?1:0)-(keys.u?1:0);
+      if(!dx&&!dy&&hasTarget){
+        const ax=tx-p.x,ay=ty-p.y,d=Math.hypot(ax,ay);
+        if(d>8){dx=ax/d;dy=ay/d;}
+      }
+      const len=Math.hypot(dx,dy);
+      if(len>0){
+        dx/=len;dy/=len;
+        p.x=Math.max(14,Math.min(WW-14,p.x+dx*150*dt));
+        p.y=Math.max(14,Math.min(WH-14,p.y+dy*150*dt));
+      }
+      cool-=dt;
+      const target=nearest();
+      if(target&&cool<=0){
+        cool=weapon.rate;
+        target.hp-=weapon.dmg;
+        tracers.push({x1:p.x,y1:p.y,x2:target.x,y2:target.y,t:0.14});
+        if(target.hp<=0){
+          enemies.splice(enemies.indexOf(target),1);
+          kills++;paint();
+        }
+      }
+      tracers.forEach(tr=>{tr.t-=dt;});
+      tracers=tracers.filter(tr=>tr.t>0);
+      spawnT-=dt;
+      if(spawnT<=0&&enemies.length<22){
+        spawnT=Math.max(0.5,2.2-kills*0.02);
+        spawnEnemy();
+      }
+      crateT-=dt;
+      if(crateT<=0){
+        crateT=7;
+        const cr={x:60+Math.random()*(WW-120),y:60+Math.random()*(WH-120),open:false};
+        if(Math.hypot(cr.x-p.x,cr.y-p.y)>140)crates.push(cr);
+      }
+      for(const cr of crates){
+        if(!cr.open&&Math.hypot(cr.x-p.x,cr.y-p.y)<24){openCrate(cr);break;}
+      }
+      contact-=dt;
+      for(let i=enemies.length-1;i>=0;i--){
+        const e=enemies[i];
+        const ax=p.x-e.x,ay=p.y-e.y,d=Math.hypot(ax,ay)||1;
+        e.x+=ax/d*e.v*dt;e.y+=ay/d*e.v*dt;
+        if(d<22&&contact<=0){
+          contact=0.7;
+          hp-=Math.max(2,10-armor*0.15);
+          paint();
+          if(hp<=0){
+            over=true;
+            msg.textContent="☠ Ты не выжил. Зомби убито: "+kills+" — жми «Заново»";
+            ctx.save(kills);
+          }
+        }
+      }
+    }
+    draw();
+  }
+  cv.addEventListener("pointerdown",e=>{
+    const r=cv.getBoundingClientRect();
+    tx=(e.clientX-r.left)*(VW/r.width);ty=(e.clientY-r.top)*(VH/r.height);
+    hasTarget=true;
+  });
+  ctx.add(cv,"pointermove",e=>{
+    if(e.pointerType==="mouse"&&e.buttons!==1)return;
+    const r=cv.getBoundingClientRect();
+    tx=(e.clientX-r.left)*(VW/r.width);ty=(e.clientY-r.top)*(VH/r.height);
+    hasTarget=true;
+  });
+  const codes={ArrowLeft:"l",ArrowRight:"r",ArrowUp:"u",ArrowDown:"d",a:"l",d:"r",w:"u",s:"d",ф:"l",в:"r",ц:"u",ы:"d"};
+  ctx.add(window,"keydown",e=>{
+    const k=codes[e.key]||codes[e.key.toLowerCase()];
+    if(!k)return;
+    keys[k]=true;hasTarget=false;e.preventDefault();
+  });
+  ctx.add(window,"keyup",e=>{
+    const k=codes[e.key]||codes[e.key.toLowerCase()];
+    if(!k)return;
+    keys[k]=false;e.preventDefault();
+  });
+  again.onclick=reset;
+  ctx.raf(loop);
+  reset();
+}
+
+const games=[
+  {id:"clicker",emoji:"🍩",name:"Кликер Пончика",desc:"Жми по пончику и покупай улучшения!",recKey:"clicker",recLabel:"рекорд кликов",better:"max",mount:mountClicker},
+  {id:"snake",emoji:"🐍",name:"Змейка",desc:"Собирай яблоки и не кусай себя!",recKey:"snake",recLabel:"рекорд",better:"max",mount:mountSnake},
+  {id:"g2048",emoji:"🔢",name:"2048",desc:"Складывай числа и собери 2048!",recKey:"g2048",recLabel:"рекорд очков",better:"max",mount:mount2048},
+  {id:"reaction",emoji:"⚡",name:"Тест реакции",desc:"Успей нажать, когда станет зелёным!",recKey:"reaction",recLabel:"лучшее время",better:"min",mount:mountReaction},
+  {id:"guess",emoji:"🔍",name:"Угадай число",desc:"Загадано число от 1 до 100. Найди его!",recKey:"guess",recLabel:"меньше попыток",better:"min",mount:mountGuess},
+  {id:"mines",emoji:"💣",name:"Сапёр",desc:"Открой все клетки и не подорвись!",recKey:"mines",recLabel:"побед",better:"max",mount:mountMines},
+  {id:"hangman",emoji:"🅰️",name:"Виселица",desc:"Угадай слово по буквам за 6 ошибок.",recKey:"hangman",recLabel:"слов угадано",better:"max",mount:mountHangman},
+  {id:"ttt",emoji:"❌",name:"Крестики-нолики",desc:"Победи компьютер. Он не так умён!",recKey:"ttt",recLabel:"побед",better:"max",mount:mountTtt},
+  {id:"memory",emoji:"🃏",name:"Мемори",desc:"Найди все пары картинок за минимум ходов.",recKey:"memory",recLabel:"меньше ходов",better:"min",mount:mountMemory},
+  {id:"puzzle",emoji:"🧩",name:"Пятнашки",desc:"Расставь числа по порядку, двигая плитки.",recKey:"puzzle",recLabel:"меньше ходов",better:"min",mount:mountPuzzle},
+  {id:"catch",emoji:"🧺",name:"Ловец еды",desc:"Лови вкусное корзинкой и не роняй!",recKey:"catch",recLabel:"рекорд",better:"max",mount:mountCatch},
+  {id:"quiz",emoji:"🧠",name:"Викторина",desc:"8 вопросов. Проверь, сколько наберёшь!",recKey:"quiz",recLabel:"лучший результат",better:"max",mount:mountQuiz},
+  {id:"airplane",emoji:"✈️",name:"Самолёты",desc:"Сбивай врагов в небе и не подпускай их!",recKey:"airplane",recLabel:"рекорд",better:"max",mount:mountAirplane},
+  {id:"zombie",emoji:"🧟",name:"Зомби-апокалипсис",desc:"Выживай среди зомби и отстреливай их!",recKey:"zombie",recLabel:"зомби убито",better:"max",mount:mountZombie},
+  {id:"fpv",emoji:"🚁",name:"FPV-дрон",desc:"Лети между домами и ставь рекорд дистанции.",recKey:"fpv",recLabel:"дальность, м",better:"max",mount:mountFpv},
+  {id:"aaa",emoji:"🎯",name:"ПВО: сбей дроны",desc:"Сидишь за зениткой и не даёшь разбомбить позицию.",recKey:"aaa",recLabel:"сбито дронов",better:"max",mount:mountAaa},
+  {id:"survive",emoji:"🏚️",name:"Один на земле",desc:"Ходи по миру, собирай лут, оружие и броню. Выживай.",recKey:"survive",recLabel:"зомби убито",better:"max",mount:mountSurvive}
+];
+
+const catalog=document.getElementById("catalog");
+function recText(game){
+  const v=store.get(game.recKey,null);
+  return v==null?"рекорд: пока нет":game.recLabel+": "+v;
+}
+catalog.innerHTML=games.map((game,i)=>
+  '<article class="card" data-id="'+game.id+'">'+
+    '<div class="num">'+(i+1)+'</div>'+
+    '<div class="emoji" aria-hidden="true">'+game.emoji+'</div>'+
+    '<h3>'+game.name+'</h3>'+
+    '<p>'+game.desc+'</p>'+
+    '<div class="rec" data-rec="'+game.id+'">'+recText(game)+'</div>'+
+    '<button class="play" type="button">ИГРАТЬ ▶</button>'+
+  '</article>'
+).join("");
+
+function saveRec(game,val){
+  const cur=store.get(game.recKey,null);
+  if(cur==null||(game.better==="min"?val<cur:val>cur))store.set(game.recKey,val);
+  const node=document.querySelector('[data-rec="'+game.id+'"]');
+  if(node)node.textContent=recText(game);
+}
+
+let cleanupNow=null;
+const overlay=document.getElementById("overlay");
+const area=document.getElementById("gamearea");
+
+function openGame(game){
+  document.getElementById("gtitle").textContent=game.emoji+" "+game.name;
+  area.innerHTML="";
+  const cleanups=[];
+  const ctx={
+    area,
+    add(el,ev,fn,opts){
+      el.addEventListener(ev,fn,opts);
+      cleanups.push(()=>el.removeEventListener(ev,fn,opts));
+    },
+    every(ms,fn){const id=setInterval(fn,ms);cleanups.push(()=>clearInterval(id));return id;},
+    later(ms,fn){const id=setTimeout(fn,ms);cleanups.push(()=>clearTimeout(id));return id;},
+    raf(fn){
+      let id=0,stop=false;
+      const step=ts=>{if(stop)return;fn(ts);id=requestAnimationFrame(step);};
+      id=requestAnimationFrame(step);
+      cleanups.push(()=>{stop=true;cancelAnimationFrame(id);});
+    },
+    save(val){saveRec(game,val);}
+  };
+  game.mount(ctx);
+  cleanupNow=()=>{
+    cleanups.splice(0).forEach(fn=>{try{fn();}catch(e){}});
+    area.innerHTML="";
+  };
+  overlay.hidden=false;
+  document.body.style.overflow="hidden";
+  document.getElementById("close").focus();
+  area.scrollTop=0;
+}
+
+function closeGame(){
+  if(cleanupNow){cleanupNow();cleanupNow=null;}
+  overlay.hidden=true;
+  document.body.style.overflow="";
+}
+
+catalog.addEventListener("click",e=>{
+  const card=e.target.closest(".card");
+  if(!card)return;
+  const game=games.find(item=>item.id===card.dataset.id);
+  if(game)openGame(game);
+});
+document.getElementById("close").addEventListener("click",closeGame);
+overlay.addEventListener("click",e=>{if(e.target===overlay)closeGame();});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&!overlay.hidden)closeGame();
+});
+
+
+</script>
+</body>
+</html>
